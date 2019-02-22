@@ -1920,7 +1920,6 @@ void CFinalizedBudget::CheckAndVote()
 
     fAutoChecked = true; //we only need to check this once
 
-
     if (strBudgetMode == "auto") //only vote for exact matches
     {
         std::vector<CBudgetProposal*> vBudgetProposals = budget.GetBudget();
@@ -1998,7 +1997,6 @@ void CFinalizedBudget::CleanAndRemove(bool fSignatureCheck)
         ++it;
     }
 }
-
 
 CAmount CFinalizedBudget::GetTotalPayout()
 {
