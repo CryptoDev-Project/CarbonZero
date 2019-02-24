@@ -125,7 +125,6 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, 
     CMutableTransaction txNew;
     txNew.vin.resize(1);
     txNew.vin[0].prevout.SetNull();
-    txNew.vin[0].scriptSig.clear();
     txNew.vout.resize(1);
     txNew.vout[0].scriptPubKey = scriptPubKeyIn;
     CBlockIndex* prev = chainActive.Tip(); 
@@ -455,8 +454,9 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, 
         pblock->nNonce = 0;
 //begin neg array code
         //Calculate the accumulator checkpoint only if the previous cached checkpoint need to be updated
+	if(nHeight>10){
 	    uint256 nCheckpoint;
-        uint256 hashBlockLastAccumulated = nHeight >= 20 ?chainActive[nHeight - (nHeight % 10) - 10]->GetBlockHash(): 0;
+        uint256 hashBlockLastAccumulated = chainActive[nHeight - (nHeight % 10) - 10]->GetBlockHash();
            LogPrintf("CreateNewBlock hashBlockLastAccumulated \n");
 	    if (nHeight >= pCheckpointCache.first || pCheckpointCache.second.first != hashBlockLastAccumulated) {
             LogPrintf("CreateNewBlock pCheckpointCache \n");
@@ -479,6 +479,7 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, 
         }
 	LogPrintf("CreateNewBlock nAccumulatorCheckpoint \n"); 	
         pblock->nAccumulatorCheckpoint = pCheckpointCache.second.second;
+	}
 //end of neg array code	
        pblocktemplate->vTxSigOps[0] = GetLegacySigOpCount(pblock->vtx[0]);
 
