@@ -248,7 +248,7 @@ public:
         nMaturity = 5;
         nMasternodeCountDrift = 4;
         nModifierUpdateBlock = 51197; //approx Mon, 17 Apr 2017 04:00:00 GMT
-        nMaxMoneyOut = 43199500 * COIN;
+        nMaxMoneyOut = 98199500 * COIN;
         nZerocoinStartHeight = 9999999;
         nZerocoinStartTime = 1536182255;
         nBlockEnforceSerialRange = 1; //Enforce serial range starting this block
