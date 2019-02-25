@@ -252,7 +252,7 @@ public:
         nZerocoinStartHeight = 201576;
         nZerocoinStartTime = 1536182255;
         nBlockEnforceSerialRange = 1; //Enforce serial range starting this block
-        nBlockRecalculateAccumulators = 1; //Trigger a recalculation of accumulators
+        nBlockRecalculateAccumulators = 9999999; // Recalculation not needed. Will be correct from start.
         nBlockFirstFraudulent = 1; //First block that bad serials emerged
         nBlockLastGoodCheckpoint = 1; //Last valid accumulator checkpoint
         nBlockEnforceInvalidUTXO = 1; //Start enforcing the invalid UTXO's
