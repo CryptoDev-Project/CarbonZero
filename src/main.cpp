@@ -387,8 +387,6 @@ void UpdateBlockAvailability(NodeId nodeid, const uint256& hash)
  *  Both pa and pb must be non-NULL. */
 CBlockIndex* LastCommonAncestor(CBlockIndex* pa, CBlockIndex* pb)
 {
-    STACK_TRACE();
-
     if (pa->nHeight > pb->nHeight) {
         pa = pa->GetAncestor(pb->nHeight);
     } else if (pb->nHeight > pa->nHeight) {
@@ -409,8 +407,6 @@ CBlockIndex* LastCommonAncestor(CBlockIndex* pa, CBlockIndex* pb)
  *  at most count entries. */
 void FindNextBlocksToDownload(NodeId nodeid, unsigned int count, std::vector<CBlockIndex*>& vBlocks, NodeId& nodeStaller)
 {
-    STACK_TRACE();
-
     if (count == 0)
         return;
 
@@ -2151,8 +2147,6 @@ int64_t GetMasternodePayment(int nHeight, int64_t blockValue, int nMasternodeCou
 
 bool IsInitialBlockDownload()
 {
-    STACK_TRACE();
-
     LOCK(cs_main);
     if (fImporting || fReindex || fVerifyingBlocks || chainActive.Height() < Checkpoints::GetTotalBlocksEstimate())
         return true;
