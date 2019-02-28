@@ -315,8 +315,6 @@ void FinalizeNode(NodeId nodeid)
 // Requires cs_main.
 void MarkBlockAsReceived(const uint256& hash)
 {
-    STACK_TRACE();
-
     map<uint256, pair<NodeId, list<QueuedBlock>::iterator> >::iterator itInFlight = mapBlocksInFlight.find(hash);
     if (itInFlight != mapBlocksInFlight.end()) {
         CNodeState* state = State(itInFlight->second.first);
@@ -331,8 +329,6 @@ void MarkBlockAsReceived(const uint256& hash)
 // Requires cs_main.
 void MarkBlockAsInFlight(NodeId nodeid, const uint256& hash, CBlockIndex* pindex = NULL)
 {
-    STACK_TRACE();
-
     CNodeState* state = State(nodeid);
     assert(state != NULL);
 
@@ -365,8 +361,6 @@ void ProcessBlockAvailability(NodeId nodeid)
 /** Update tracking information about which blocks a peer is assumed to have. */
 void UpdateBlockAvailability(NodeId nodeid, const uint256& hash)
 {
-    STACK_TRACE();
-
     CNodeState* state = State(nodeid);
     assert(state != NULL);
 
@@ -387,8 +381,6 @@ void UpdateBlockAvailability(NodeId nodeid, const uint256& hash)
  *  Both pa and pb must be non-NULL. */
 CBlockIndex* LastCommonAncestor(CBlockIndex* pa, CBlockIndex* pb)
 {
-    STACK_TRACE();
-
     if (pa->nHeight > pb->nHeight) {
         pa = pa->GetAncestor(pb->nHeight);
     } else if (pb->nHeight > pa->nHeight) {
@@ -409,8 +401,6 @@ CBlockIndex* LastCommonAncestor(CBlockIndex* pa, CBlockIndex* pb)
  *  at most count entries. */
 void FindNextBlocksToDownload(NodeId nodeid, unsigned int count, std::vector<CBlockIndex*>& vBlocks, NodeId& nodeStaller)
 {
-    STACK_TRACE();
-
     if (count == 0)
         return;
 
@@ -495,8 +485,6 @@ void FindNextBlocksToDownload(NodeId nodeid, unsigned int count, std::vector<CBl
 
 bool GetNodeStateStats(NodeId nodeid, CNodeStateStats& stats)
 {
-    STACK_TRACE();
-
     LOCK(cs_main);
     CNodeState* state = State(nodeid);
     if (state == NULL)
@@ -1168,8 +1156,6 @@ bool CheckTransaction(const CTransaction& tx, bool fZerocoinActive, bool fReject
 
 bool CheckFinalTx(const CTransaction& tx, int flags)
 {
-    STACK_TRACE();
-
     AssertLockHeld(cs_main);
 
     // By convention a negative value for flags indicates that the
@@ -1819,8 +1805,6 @@ bool ReadBlockFromDisk(CBlock& block, const CBlockIndex* pindex)
 
 double ConvertBitsToDouble(unsigned int nBits)
 {
-    STACK_TRACE();
-
     int nShift = (nBits >> 24) & 0xff;
 
     double dDiff =
@@ -1840,9 +1824,10 @@ double ConvertBitsToDouble(unsigned int nBits)
 
 int64_t GetBlockValue(int nHeight)
 {
-    STACK_TRACE();
+    LogPrint("stack","StackTrace: int64_t GetBlockValue(int %d)\n",nHeight);
 
     if (Params().NetworkID() == CBaseChainParams::TESTNET) {
+        nStakeMinAge = 60 * 60 * 1; // 1 hours
         if (nHeight < 200 && nHeight > 0)
             return 250000 * COIN;}
     {
@@ -2151,8 +2136,6 @@ int64_t GetMasternodePayment(int nHeight, int64_t blockValue, int nMasternodeCou
 
 bool IsInitialBlockDownload()
 {
-    STACK_TRACE();
-
     LOCK(cs_main);
     if (fImporting || fReindex || fVerifyingBlocks || chainActive.Height() < Checkpoints::GetTotalBlocksEstimate())
         return true;
@@ -2172,8 +2155,6 @@ CBlockIndex *pindexBestForkTip = NULL, *pindexBestForkBase = NULL;
 
 void CheckForkWarningConditions()
 {
-    STACK_TRACE();
-
     AssertLockHeld(cs_main);
     // Before we get past initial download, we cannot reliably alert about forks
     // (we assume we don't get stuck on a fork before the last checkpoint)
@@ -2212,8 +2193,6 @@ void CheckForkWarningConditions()
 
 void CheckForkWarningConditionsOnNewFork(CBlockIndex* pindexNewForkTip)
 {
-    STACK_TRACE();
-
     AssertLockHeld(cs_main);
     // If we are on a fork that is sufficiently large, set a warning flag
     CBlockIndex* pfork = pindexNewForkTip;
@@ -2303,8 +2282,6 @@ void static InvalidBlockFound(CBlockIndex* pindex, const CValidationState& state
 
 void UpdateCoins(const CTransaction& tx, CValidationState& state, CCoinsViewCache& inputs, CTxUndo& txundo, int nHeight)
 {
-    STACK_TRACE();
-
     // mark inputs spent
     if (!tx.IsCoinBase() && !tx.IsZerocoinSpend()) {
         txundo.vprevout.reserve(tx.vin.size());
@@ -2321,8 +2298,6 @@ void UpdateCoins(const CTransaction& tx, CValidationState& state, CCoinsViewCach
 
 bool CScriptCheck::operator()()
 {
-    STACK_TRACE();
-
     const CScript& scriptSig = ptxTo->vin[nIn].scriptSig;
     if (!VerifyScript(scriptSig, scriptPubKey, nFlags, CachingTransactionSignatureChecker(ptxTo, nIn, cacheStore), &error)) {
         return ::error("CScriptCheck(): %s:%d VerifySignature failed: %s", ptxTo->GetHash().ToString(), nIn, ScriptErrorString(error));
@@ -3163,14 +3138,14 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
     LogPrint("bench", "      - Connect %u transactions: %.2fms (%.3fms/tx, %.3fms/txin) [%.2fs]\n", (unsigned)block.vtx.size(), 0.001 * (nTime1 - nTimeStart), 0.001 * (nTime1 - nTimeStart) / block.vtx.size(), nInputs <= 1 ? 0 : 0.001 * (nTime1 - nTimeStart) / (nInputs - 1), nTimeConnect * 0.000001);
 
     //PoW phase redistributed fees to miner. PoS stage destroys fees.
-    CAmount nExpectedMint = GetBlockValue(pindex->pprev->nHeight);
+    CAmount nExpectedMint = GetBlockValue(pindex->nHeight);
     if (block.IsProofOfWork())
         nExpectedMint += nFees;
 
     //Check that the block does not overmint
-    if (!IsBlockValueValid(block, nExpectedMint, pindex->pprev->nMint)) {
+    if (!IsBlockValueValid(block, nExpectedMint, pindex->nMint)) {
         return state.DoS(100, error("ConnectBlock() : reward pays too much (actual=%s vs limit=%s)",
-                                    FormatMoney(pindex->pprev->nMint), FormatMoney(nExpectedMint)),
+                                    FormatMoney(pindex->nMint), FormatMoney(nExpectedMint)),
                          REJECT_INVALID, "bad-cb-amount");
     }
 
@@ -4277,7 +4252,6 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
         return state.DoS(100, error("CheckBlock() : out-of-bounds SigOpCount"),
             REJECT_INVALID, "bad-blk-sigops", true);
 
-    LogPrintf("CheckBlock() : OK\n");
     return true;
 }
 
@@ -4308,8 +4282,6 @@ bool CheckWork(const CBlock block, CBlockIndex* const pindexPrev)
 
 bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& state, CBlockIndex* const pindexPrev)
 {
-    STACK_TRACE();
-
     uint256 hash = block.GetHash();
 
     if (hash == Params().HashGenesisBlock())
