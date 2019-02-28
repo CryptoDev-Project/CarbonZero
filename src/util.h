@@ -70,7 +70,7 @@ int LogPrintStr(const std::string& str);
 
 #define LogPrintf(...) LogPrint(NULL, __VA_ARGS__)
 
-#define STACK_TRACE() LogPrint(NULL, "StackTrace: %s()\n", __func__);
+#define STACK_TRACE() LogPrint("stack", "StackTrace: %s\n", __PRETTY_FUNCTION__);
 
 /**
  * When we switch to C++11, this can be switched to variadic templates instead
