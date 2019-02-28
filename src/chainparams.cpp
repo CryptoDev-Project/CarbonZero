@@ -126,7 +126,7 @@ public:
         nTargetSpacing = 1 * 60;  // CarbonZero: 1 minute Block difficulty will adjust every block.
         nMaturity = 60; // ~1 hour for mined/coinbase coins
         nMasternodeCountDrift = 20;
-	nMasternodeColleteralLimxDev = 1000; // Params().MasternodeColleteralLimxDev(). Added so collateral can be changed from one place
+        nMasternodeColleteralLimxDev = 1000; // Params().MasternodeColleteralLimxDev(). Added so collateral can be changed from one place
         nMaxMoneyOut = 10225000 * COIN; // ~10 years / only 3,400,000 in the ~ first 3 years
 
         /** Height or Time Based Activations **/
@@ -136,7 +136,7 @@ public:
         nZerocoinStartTime = 1539100800; // Needs testing before start
         nBlockEnforceSerialRange = 1; // Serial Range Enforcements start immediately
         nBlockRecalculateAccumulators = 9999999; // Recalculation not needed. Will be correct from start.
-	nBlockFirstFraudulent = 1; // No bad serials.
+        nBlockFirstFraudulent = 1; // No bad serials.
         nBlockLastGoodCheckpoint = 1; // Accumulators will be valid from launch
         nBlockEnforceInvalidUTXO = 1; // Enforce valid UTXOs from launch
         nInvalidAmountFiltered = 0*COIN; // No coins were filtered through exchanges that should be considered valid. This was specific to PIVX
@@ -164,13 +164,12 @@ public:
         assert(genesis.hashMerkleRoot == uint256("0xd69bd71023c7bc0274f9c1fe33251139cad6b5031bc9732003d601d0eabfe632"));
 
         
-	//vFixedSeeds.clear(); //! No Fixed Seeds
+        //vFixedSeeds.clear(); //! No Fixed Seeds
         //vSeeds.clear();      //! No DNS Seeds
         vSeeds.push_back(CDNSSeedData("54.86.71.197", "54.86.71.197"));           // Single node address
-	vSeeds.push_back(CDNSSeedData("54.209.143.250", "54.209.143.250"));           // Single node address
-	vSeeds.push_back(CDNSSeedData("35.169.184.177", "35.169.184.177"));           // Single node address
-	vSeeds.push_back(CDNSSeedData("18.207.37.156", "18.207.37.156"));           // Single node address
-	
+        vSeeds.push_back(CDNSSeedData("54.209.143.250", "54.209.143.250"));           // Single node address
+        vSeeds.push_back(CDNSSeedData("35.169.184.177", "35.169.184.177"));           // Single node address
+        vSeeds.push_back(CDNSSeedData("18.207.37.156", "18.207.37.156"));           // Single node address
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1, 28);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1, 81);
@@ -244,7 +243,7 @@ public:
         nMinerThreads = 0;
         nTargetTimespan = 1 * 60; // CarbonZero: 1 day
         nTargetSpacing = 1 * 60;  // CarbonZero: 1 minute
-        nLastPOWBlock = 1000;
+        nLastPOWBlock = 200;
         nMaturity = 5;
         nMasternodeCountDrift = 4;
         nModifierUpdateBlock = 51197; //approx Mon, 17 Apr 2017 04:00:00 GMT
@@ -261,6 +260,8 @@ public:
         nEnforceNewSporkKey = 1536182255; //!> Sporks signed after Wednesday, March 21, 2018 4:00:00 AM GMT must use the new spork key
         nRejectOldSporkKey = 1536182255; //!> Reject old spork key after Saturday, March 31, 2018 12:00:00 AM GMT
 
+        bnProofOfWorkLimit = ~uint256(0) >> 1;
+
         //! Modify the testnet genesis block so the timestamp is valid for a later start.
         genesis.nTime = 1540529475;
         genesis.nNonce = 779137;
@@ -270,10 +271,6 @@ public:
 
         vFixedSeeds.clear();
         vSeeds.clear();
-        //vSeeds.push_back(CDNSSeedData("fuzzbawls.pw", "carbonzero-testnet.seed.fuzzbawls.pw"));
-        //vSeeds.push_back(CDNSSeedData("fuzzbawls.pw", "carbonzero-testnet.seed2.fuzzbawls.pw"));
-        //vSeeds.push_back(CDNSSeedData("s3v3nh4cks.ddns.net", "s3v3nh4cks.ddns.net"));
-        //vSeeds.push_back(CDNSSeedData("88.198.192.110", "88.198.192.110"));
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1, 139); // Testnet carbonzero addresses start with 'x' or 'y'
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1, 19);  // Testnet carbonzero script addresses start with '8' or '9'
