@@ -1021,7 +1021,7 @@ void CBudgetManager::NewBlock()
 
     if (masternodeSync.RequestedMasternodeAssets <= MASTERNODE_SYNC_BUDGET) return;
 
-    //if (strBudgetMode == "suggest") { //suggest the budget we see
+    if (strBudgetMode == "suggest") { //suggest the budget we see
         SubmitFinalBudget();
     //}
 
