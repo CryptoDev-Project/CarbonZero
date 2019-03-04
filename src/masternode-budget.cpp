@@ -1023,7 +1023,7 @@ void CBudgetManager::NewBlock()
 
     if (strBudgetMode == "suggest") { //suggest the budget we see
         SubmitFinalBudget();
-    //}
+    }
 
     //this function should be called 1/14 blocks, allowing up to 100 votes per day on all proposals
     if (chainActive.Height() % 14 != 0) return;
