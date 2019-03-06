@@ -174,10 +174,12 @@ color:#333333;
 }
 
 .QRadioButton { /* Radio Button Labels */
+font-size:13px;
 color:#333333;
 }
 
 .QCheckBox { /* Checkbox Labels */
+font-size:13px;
 color:#333333;
 }
 

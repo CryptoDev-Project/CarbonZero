@@ -59,7 +59,11 @@ SendCoinsDialog::SendCoinsDialog(QWidget* parent) : QDialog(parent, Qt::WindowSy
     // UTXO Splitter
     connect(ui->splitBlockCheckBox, SIGNAL(stateChanged(int)), this, SLOT(splitBlockChecked(int)));
     connect(ui->splitBlockLineEdit, SIGNAL(textChanged(const QString&)), this, SLOT(splitBlockLineEditChanged(const QString&)));
-
+    
+    // Bitcoin Checkbox
+    connect(ui->bitcoinCheckBox, SIGNAL(stateChanged(int)), this, SLOT(bitcoinCheckbox(int)));
+    ui->bitcoinCheckBox->setChecked(1);
+            
     // CarbonZero specific
     QSettings settings;
     if (!settings.contains("bUseObfuScation"))
